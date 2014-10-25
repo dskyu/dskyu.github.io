@@ -1,24 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[兔宝宝君000的博客]]></title>
   <link href="http://dskyu.github.io/atom.xml" rel="self"/>
   <link href="http://dskyu.github.io/"/>
-  <updated>2014-10-22T13:07:13+08:00</updated>
+  <updated>2014-10-25T19:26:03+08:00</updated>
   <id>http://dskyu.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
-    
+    <name><![CDATA[Bunnydu]]></name>
+    <email><![CDATA[dskyu2004@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
-    <title type="html"><![CDATA[Title]]></title>
+    <title type="html"><![CDATA[序]]></title>
     <link href="http://dskyu.github.io/blog/2014/10/22/title/"/>
     <updated>2014-10-22T11:35:18+08:00</updated>
     <id>http://dskyu.github.io/blog/2014/10/22/title</id>
-    <content type="html"><![CDATA[<p>First Blog</p>
+    <content type="html"><![CDATA[<p>最近有同事说,你为什么不写点博客,这样才好与别人一起分享嘛. 其实我想说的就是,我以前有写过博客,只是后面人越来越懒,就不想写了.</p>
+
+<p>然后我发现了octopress这个神器,它可以把博客这种事情还原的十分完美,<strong>让写博客变得如此纯粹</strong>.所以我也尝试了一下,也算给自己开了个头吧,愿自己以后可以勤奋一点..-_-</p>
+
+<p>试着导入了两篇以前写的博客,惊奇的发现,还是大一的时候写的.(这是有多懒)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于二叉树的局域网MorseCode的发收程序]]></title>
+    <link href="http://dskyu.github.io/blog/2010/12/19/ji-yu-er-cha-shu-de-ju-yu-wang-morsecodede-fa-shou-cheng-xu/"/>
+    <updated>2010-12-19T17:30:21+08:00</updated>
+    <id>http://dskyu.github.io/blog/2010/12/19/ji-yu-er-cha-shu-de-ju-yu-wang-morsecodede-fa-shou-cheng-xu</id>
+    <content type="html"><![CDATA[<p>为了测试一下新博客,这是以前的csdn里面导入的 <a href="http://blog.csdn.net/bunnydu/article/details/6085374">原文地址</a></p>
+
+<h5>课题名：模拟电报通讯</h5>
+
+<p>要求：电报大家是都知道的。现在我想要大家用c语言做一个局域网内的电报通讯软件（无需界面，控制台程序即可）。中间会涉及到网络编程，摩尔斯电码解析（就是字符串处理）等知识。无需做的多复杂，我只要这些功能：</p>
+
+<ul>
+<li>电报功能的模拟。能收，能回复。</li>
+<li>将重要讯息存盘处理。</li>
+<li>摩尔斯电码的准确解析。无需中文，简单的英文即可。</li>
+</ul>
+
+
+<p>下面我就说说我是怎么做的吧</p>
+
+<p>首先网络部分，这个比较简单，看看例子，几个函数的调用，看看说明，然后研究一下就OK了。</p>
+
+<p>存盘部分，也比较简单，用一个二级针指，把所有信息先记录下来，然后看用户有没有需要，不要的话free就完事了。</p>
+
+<p>我想重点讲讲这个有趣的MorseCode（PS:这个一点一杠的真的很有意思，大家可以看看百度百科，还有一个段基于MorseCode的爱情）。好了，进入正题，其实MorseCode可不用要用枚举的，那样一个一个地写多麻烦啊，下面我来介绍一种基于二叉树实现的MorseCode。</p>
+
+<p>先让大家看看一些符号的MorseCode:</p>
+
+<p><img src="http://wenwen.soso.com/p/20110717/20110717122720-194548898.jpg" alt="Morse" /></p>
+
+<p>有规律吗？答案是必然的！再看：</p>
+
+<p><img src="http://www.sjzham.cn/bbs/UpFile/UpAttachment/2009-3/20093111051420.jpg" alt="Morse" /></p>
+
+<p>“嘀”声代表一点，“哒”声代表一横线，听到“嘀”就向右移动，听到“哒”就向左移动。例如你听到“哒嘀嘀”，就表示先向左一次，再向右两次，就会去到D那里。</p>
+
+<p>有规律了吧，不信的可以自己去验证一下！好，有了 这些基础就是我们大展才华的奠基石了！
+下面看一段代码：</p>
+
+<p><strong>生成MorseCode树</strong></p>
+
+<pre><code>typedef struct tree 
+{
+    char data;
+    struct tree *leftchild;
+    struct tree *rightchild;
+} MorseCode;
+
+#define LENTREE sizeof(MorseCode)
+char morse[100]={'#','T','M','O',',','0','$','$','9','$','$','.','$','8','$','$','G','Q','$','$','Z',/
+'$','7','$','$','N','K','Y','$','$','C','$','$','D','X','$','$','B','$','6','$','$','E','A','W','J',/
+'1','$','$','$','P','$','$','R','$','L','$','$','I','U','-','2','$','$','$','F','$','$','S','V',/
+'3','$','$','$','H','4','$','$','5','$','$'};
+
+int morse_x=-1;
+
+void creat_tree(MorseCode **root)
+{
+    morse_x++;
+
+    if (morse[morse_x] == '$') 
+    {
+        (*root) = NULL;
+    }
+    else 
+    {
+        (*root) = (MorseCode *) malloc (LENTREE);
+        (*root)-&gt;data = morse[morse_x];
+        creat_tree(&amp;(*root)-&gt;leftchild);
+        creat_tree(&amp;(*root)-&gt;rightchild);
+    }
+    return ;
+}
+</code></pre>
+
+<p><strong>将字符串转为MorseCode</strong></p>
+
+<pre><code>void preorder_letterTOmorse(MorseCode *root,char *morsecode,char *letter,int i,int *j)  
+{  
+    if (root)   
+    {  
+        if (root-&gt;data == letter[i])   
+        {  
+            morsecode[(*j)++] = ' ';  
+            return ;  
+        }  
+        else   
+        {  
+            morsecode[(*j)++] = '_';  
+            preorder_letterTOmorse(root-&gt;leftchild,morsecode,letter,i,j);  
+            if (morsecode[(*j)-1] == ' ') return ;  
+            (*j)--;  
+            morsecode[(*j)++] = '.';  
+            preorder_letterTOmorse(root-&gt;rightchild,morsecode,letter,i,j);  
+            if (morsecode[(*j)-1] == ' ') return ;  
+            (*j)--;  
+            if (morsecode[(*j)] == ' ') return ;  
+        }  
+    }  
+    return ;  
+}  
+
+void letterTOmorse(MorseCode *root, char **morsecode,char *letter)  
+{  
+    (*morsecode) = (char *) malloc(sizeof(char)*100);  
+    strnset((*morsecode),'0',100);   
+    int i=0,j=0;  
+    while (letter[i]!='/0')  
+    {  
+        preorder_letterTOmorse(root,*morsecode,letter,i,&amp;j);  
+        i++;  
+    }  
+    (*morsecode)[j]='/0';  
+}  
+</code></pre>
+
+<p><strong>将MorseCode转为字符串</strong></p>
+
+<pre><code>char preorder_morseTOletter(MorseCode *root,char *temp,int *j)  
+{  
+    (*j)++;  
+    char result;  
+    if (root)   
+    {  
+        if (temp[*j]=='/0')  
+        {  
+            return root-&gt;data;  
+        }  
+        if (temp[*j]=='_')   
+        {  
+            result=preorder_morseTOletter(root-&gt;leftchild,temp,j);  
+            if (temp[*j]=='/0')  
+            {  
+                return result;  
+            }  
+        }  
+        if (temp[*j]=='.')  
+        {   
+            result=preorder_morseTOletter(root-&gt;rightchild,temp,j);  
+            if (temp[*j]=='/0')  
+            {  
+              return result;  
+            }  
+        }  
+    }  
+}
+
+void morseTOletter(MorseCode *root, char *morsecode,char **letter)  
+{  
+    (*letter) = (char *) malloc(sizeof(char)*100);  
+    char *temp = (char *) malloc(sizeof(char)*10);  
+    int i=0,j=0,k=0;  
+    while ( morsecode[i]!='/0')  
+    {  
+       j=0;  
+       while(morsecode[i]=='.' || morsecode[i]=='_')  
+       {  
+           temp[j++]=morsecode[i++];  
+       }  
+       temp[j]='/0';  
+       if ( morsecode[i]=='/0')  
+       {  
+            break;  
+       }  
+       else   
+       {  
+            i++;  
+       }  
+       j=-1;  
+      (*letter)[k++]=preorder_morseTOletter(root,temp,&amp;j);  
+    }  
+    (*letter)[k]='/0';  
+    free(temp);  
+    return ;  
+}  
+</code></pre>
+
+<p>有了这些代码，是不是很方便地转换了？
+还有就是，要加入更多字符的信息只要在创建树的时候加一字符就ok了，加上树的搜索效率，是不是感觉很爽啊！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Objective-c入门之@property指令 浅谈]]></title>
+    <link href="http://dskyu.github.io/blog/2010/12/19/objective-cru-men-zhi-at-propertyzhi-ling-qian-tan/"/>
+    <updated>2010-12-19T16:54:26+08:00</updated>
+    <id>http://dskyu.github.io/blog/2010/12/19/objective-cru-men-zhi-at-propertyzhi-ling-qian-tan</id>
+    <content type="html"><![CDATA[<p>为了测试一下新博客,这是以前的csdn里面导入的 <a href="http://blog.csdn.net/bunnydu/article/details/6085327">原文地址</a></p>
+
+<p>最近学习了一下objective-c，对于新手，是不是会对@property @synthesize这个指令感到比较奇怪呢？毕竟Ｃ里面没有这个“乱七八糟“的东西啊！</p>
+
+<p>首先介绍一下这个指令@property吧</p>
+
+<p>这个“乱七八糟“的东西呢其实是一个很好的东西，如果你用很Ｃ的规范去写一个类时，你会不会要对这个类的成员进行写入和读取数据呢？答案是必然的，所以这时你就得写一个-(void) setX(id ..) 和一个－(id) X    （Ｘ代表成员的名字）来写入和读取这个成员的数据对吧， 这是不是很麻烦啊？ 所以呢，objective-c2.0 就加了这个“乱七八糟“的东西，帮助一你一气呵成这些须要重复一遍又一遍的代码（尽管你可以复制，但我可以保证，你会按command+c  command+v按到手抽筋)。</p>
+
+<p>好吧，废话不多，说点有用的。</p>
+
+<p>@property指令中有三对参数，可能有人要问你，合成方法就合成方法呗，又搞这么多参数干什么？先别急，呆会儿你就开眼界了。</p>
+
+<ol>
+<li><p>readwrite,readonly，设置可供访问级别</p></li>
+<li><p>assign/retain/copy
+  assign，setter方法直接赋值，不进行任何retain操作。
+  retain，setter方法对参数进行release旧值再retain新值。
+  copy，setter方法进行Copy操作，与retain处理流程一样，先旧值release，再Copy出新的对象，retainCount为1。这是为了减少对上下文的依赖而引入的机制。</p></li>
+<li><p>nonatomic/atomic.</p></li>
+</ol>
+
+
+<p>第一组参数就不介绍了，相信大家都 懂的。重点想说一下第二组参数 上面简单的写了一下，可能有点含糊，没关系下面详细地说一下</p>
+
+<p>假设你用malloc分配了一块内存，并且把它的地址赋值给了指针a，后来你希望指针b也共享这块内存，于是你又把a赋值给（assign）了b。此时a和b指向同一块内存，请问当a不再需要这块内存，能否直接释放它？答案是否定的，因为a并不知道b是否还在使用这块内存，如果a释放了，那么b在使用这块内存的时候会引起程序crash掉。 （大家可以先想想这个问题 ）</p>
+
+<p> assign的话，就是简单的赋值，不引起retainCount的改变，当你在设置像int ,char ,float等原生类型的时候，用这个参数会有很不错的效果（因为就是一样基本类型嘛，a=1 (assign)一个b  当然也是1了），但是！！ 在设置像一些对像的时候就会出现一样很明显的问题了（因为我们都 是用的指针）。想必你已 经有些明白了，假设a指向0x1111地址 开辟了一段内存  然后b也指向这个地址（显然assign）了，然后我release a    b呢？ 是不是b也遭殃了？咋 办呢？ objective-c里面就加入了一个引用计数机制，这时你就要用到retain了，同时刚才那个问题，如果b=[a retain];  [a release];会有什么不同呢？  这时objective-c里面引用计数机制起作用了，一开始a申请了一段空间，这时， retainCount＝1； b=[a retain]；（ retainCount＝2），[a release]（注意，这时这块内存空间并没有释放 retainCount＝1  还不为0    为0才会被释放）所以b依然可以高枕无忧的指过去。    现在懂了吧！</p>
+
+<p>然后还有一个copy，这个好理解，a指向0x1111地址    b copy一份之后，就不是指向0x1111地址了，而可能指向0x2222地址，这样b与a就没有任何瓜葛了，它们井水不犯河水，想当你硬要说它们有瓜葛因为他们值相等，我也没办法，就像有人说你这张一百的是他的一样，因为他也一张面值一百的大钞，纠结啊！！！！</p>
+
+<p>好了，终于啰嗦完了，还有一对nonatomic/atomic 这个的话，我目前也不清楚什么是原子操作，什么是非原子操作，还请大家多多指教 啦！！！</p>
+
+<p>还有，注意一下@property的默认参数，这我就不说了，大家可以自己去查一查。。。</p>
+
+<p>可能有什么错误的，还请大家批评指正，我也是初学者，在这班门弄斧，真是过意不去啊！还请菩萨保佑！</p>
 ]]></content>
   </entry>
   
